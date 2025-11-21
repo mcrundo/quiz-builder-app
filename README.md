@@ -2,7 +2,7 @@
 
 A Python parser for DOCX quiz files with a Vue3 web interface.
 
-[![CI](https://github.com/mcrundo/quiz-builder/actions/workflows/ci.yml/badge.svg)](https://github.com/mcrundo/quiz-builder/actions/workflows/ci.yml)
+[![CI](https://github.com/mcrundo/quiz-builder-app/actions/workflows/ci.yml/badge.svg)](https://github.com/mcrundo/quiz-builder-app/actions/workflows/ci.yml)
 
 ## Project Structure
 
