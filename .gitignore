@@ -1,5 +1,6 @@
 # Project
 quiz.json
+web/public/quiz.json
 
 # Python
 __pycache__/
@@ -70,6 +71,11 @@ pnpm-debug.log*
 .cache/
 dist/
 .nuxt/
+.eslintcache
+*.tsbuildinfo
+web/dist/
+web/dist-ssr/
+web/coverage/
 
 # Environment
 .env
