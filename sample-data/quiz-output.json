@@ -1,0 +1,71 @@
+{
+  "version": "1.0",
+  "questions": [
+    {
+      "id": 1,
+      "text": "What color is the sky?",
+      "choices": [
+        {
+          "label": "A",
+          "text": "Blue"
+        },
+        {
+          "label": "B",
+          "text": "Purple"
+        },
+        {
+          "label": "C",
+          "text": "None of the above"
+        },
+        {
+          "label": "D",
+          "text": "It depends"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "text": "Did you use AI tools in creating this solution?",
+      "choices": [
+        {
+          "label": "A",
+          "text": "Yes"
+        },
+        {
+          "label": "B",
+          "text": "No"
+        },
+        {
+          "label": "C",
+          "text": "A little"
+        },
+        {
+          "label": "D",
+          "text": "What are AI tools"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "text": "If so, which ones",
+      "choices": [
+        {
+          "label": "A",
+          "text": "ChatGPT"
+        },
+        {
+          "label": "B",
+          "text": "Claude"
+        },
+        {
+          "label": "C",
+          "text": "Gemini"
+        },
+        {
+          "label": "D",
+          "text": "Other"
+        }
+      ]
+    }
+  ]
+}
