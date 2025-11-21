@@ -7,7 +7,7 @@ from typing import Literal
 # Load shared configuration from project root
 # Path goes: defaults.py -> question_parser -> src -> parser -> root
 _CONFIG_PATH = Path(__file__).parent.parent.parent.parent / "config.json"
-with open(_CONFIG_PATH, "r") as f:
+with open(_CONFIG_PATH) as f:
     _config = json.load(f)
 
 # Valid choice labels
