@@ -3,12 +3,19 @@
  * These types match the Python Pydantic models in the parser.
  */
 
+import type { LABEL_CHOICES } from '@/constants/quiz'
+
+/**
+ * Valid choice labels from shared config.
+ */
+export type ChoiceLabel = (typeof LABEL_CHOICES)[number]
+
 /**
  * A single answer choice for a question.
  * Labels are always A, B, C, or D.
  */
 export interface Choice {
-  label: 'A' | 'B' | 'C' | 'D'
+  label: ChoiceLabel
   text: string
 }
 
@@ -34,7 +41,7 @@ export interface Quiz {
  */
 export interface Answer {
   questionId: number
-  selectedLabel: 'A' | 'B' | 'C' | 'D'
+  selectedLabel: ChoiceLabel
 }
 
 /**

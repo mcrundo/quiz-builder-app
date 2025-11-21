@@ -1,0 +1,7 @@
+{
+  "CHOICES_PER_QUESTION": 4,
+  "LABEL_CHOICES": ["A", "B", "C", "D"],
+  "QUIZ_VERSION": "1.0",
+  "QUESTION_ID_START": 1,
+  "QUESTION_KEYWORD": "Question"
+}
