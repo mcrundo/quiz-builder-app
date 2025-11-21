@@ -4,6 +4,7 @@ import pytest
 
 from question_parser.defaults import LABEL_CHOICES
 from question_parser.models import Choice, Question, Quiz
+from question_parser.parser import QuestionParser
 
 
 @pytest.fixture
@@ -63,3 +64,41 @@ def valid_question_2(valid_choices: list[Choice]) -> Question:
 def valid_quiz(valid_question: Question, valid_question_2: Question) -> Quiz:
     """A valid Quiz with sequential questions."""
     return Quiz(questions=[valid_question, valid_question_2])
+
+
+@pytest.fixture
+def parser() -> QuestionParser:
+    """A QuestionParser instance."""
+    return QuestionParser()
+
+
+@pytest.fixture
+def valid_question_paragraphs() -> list[str]:
+    """Paragraphs for a single valid question."""
+    return [
+        "Question 1",
+        "What is the capital of France?",
+        "A. Paris",
+        "B. London",
+        "C. Berlin",
+        "D. Madrid",
+    ]
+
+
+@pytest.fixture
+def valid_quiz_paragraphs() -> list[str]:
+    """Paragraphs for a valid quiz with two questions."""
+    return [
+        "Question 1",
+        "What is the capital of France?",
+        "A. Paris",
+        "B. London",
+        "C. Berlin",
+        "D. Madrid",
+        "Question 2",
+        "What is 2 + 2?",
+        "A. 3",
+        "B. 4",
+        "C. 5",
+        "D. 6",
+    ]
