@@ -50,3 +50,4 @@ jobs:
           files: ./parser/coverage.xml
           flags: python
           fail_ci_if_error: false
+
