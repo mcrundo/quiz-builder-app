@@ -3,6 +3,7 @@
 import pytest
 
 from question_parser.defaults import CHOICES_PER_QUESTION
+from question_parser.errors import ParsingError
 from question_parser.parser import QuestionParser
 
 
@@ -36,7 +37,7 @@ def test_parse_multiline_question_text(parser: QuestionParser) -> None:
 
 def test_parse_empty_paragraphs(parser: QuestionParser) -> None:
     """Test that empty paragraph list raises error."""
-    with pytest.raises(ValueError, match="No paragraphs to parse"):
+    with pytest.raises(ParsingError, match="No paragraphs to parse"):
         parser.parse([])
 
 
@@ -44,7 +45,7 @@ def test_parse_no_questions(parser: QuestionParser) -> None:
     """Test that paragraphs with no questions raises error."""
     paragraphs = ["Some random text", "More text"]
 
-    with pytest.raises(ValueError, match="No valid questions found"):
+    with pytest.raises(ParsingError, match="No valid questions found"):
         parser.parse(paragraphs)
 
 
@@ -58,7 +59,7 @@ def test_parse_missing_choices(parser: QuestionParser) -> None:
         # Missing C and D
     ]
 
-    with pytest.raises(ValueError, match=f"has 2 choices, expected {CHOICES_PER_QUESTION}"):
+    with pytest.raises(ParsingError, match=f"has 2 choices, expected {CHOICES_PER_QUESTION}"):
         parser.parse(paragraphs)
 
 
@@ -73,7 +74,7 @@ def test_parse_invalid_labels(parser: QuestionParser) -> None:
         "D. Choice D",
     ]
 
-    with pytest.raises(ValueError, match="has invalid labels"):
+    with pytest.raises(ParsingError, match="has invalid labels"):
         parser.parse(paragraphs)
 
 
@@ -87,7 +88,7 @@ def test_parse_question_no_text(parser: QuestionParser) -> None:
         "D. Madrid",
     ]
 
-    with pytest.raises(ValueError, match="Question 1 has no text"):
+    with pytest.raises(ParsingError, match="Question 1 has no text"):
         parser.parse(paragraphs)
 
 
