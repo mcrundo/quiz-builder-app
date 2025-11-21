@@ -7,6 +7,7 @@ from question_parser.defaults import (
     LABEL_CHOICES,
     QUESTION_KEYWORD,
 )
+from question_parser.errors import ParsingError
 from question_parser.models import Choice, Question, Quiz
 
 
@@ -29,15 +30,15 @@ class QuestionParser:
             Quiz object with parsed questions
 
         Raises:
-            ValueError: If parsing fails due to invalid format
+            ParsingError: If parsing fails due to invalid format
         """
         if not paragraphs:
-            raise ValueError("No paragraphs to parse")
+            raise ParsingError("No paragraphs to parse")
 
         questions = self.parse_all_questions(paragraphs)
 
         if not questions:
-            raise ValueError("No valid questions found")
+            raise ParsingError("No valid questions found")
 
         return Quiz(questions=questions)
 
@@ -76,10 +77,10 @@ class QuestionParser:
             Tuple of (Question object, number of lines consumed)
 
         Raises:
-            ValueError: If question format is invalid
+            ParsingError: If question format is invalid
         """
         if len(paragraphs) < 2:
-            raise ValueError(f"Question {question_id} has no text")
+            raise ParsingError(f"Question {question_id} has no text")
 
         question_text, text_end = self._parse_question_text(paragraphs, question_id)
         choices = self._parse_choices(paragraphs, text_end, question_id)
@@ -105,10 +106,10 @@ class QuestionParser:
             Tuple of (question text, index of first choice)
 
         Raises:
-            ValueError: If no text found before choices
+            ParsingError: If no text found before choices
         """
         if len(paragraphs) < 2:
-            raise ValueError(f"Question {question_id} has no text")
+            raise ParsingError(f"Question {question_id} has no text")
 
         text_lines = []
         i = 1  # Start after "Question N"
@@ -119,7 +120,7 @@ class QuestionParser:
             i += 1
 
         if not text_lines:
-            raise ValueError(f"Question {question_id} has no text")
+            raise ParsingError(f"Question {question_id} has no text")
 
         # If we found labeled choices, we're done
         if i < len(paragraphs) and self.choice_pattern.match(paragraphs[i]):
@@ -148,7 +149,7 @@ class QuestionParser:
             List of Choice objects
 
         Raises:
-            ValueError: If wrong number of choices found
+            ParsingError: If wrong number of choices found
         """
         choices: list[Choice] = []
         i = start_index
@@ -178,7 +179,7 @@ class QuestionParser:
                 i += 1
 
         if len(choices) != CHOICES_PER_QUESTION:
-            raise ValueError(
+            raise ParsingError(
                 f"Question {question_id} has {len(choices)} choices, "
                 f"expected {CHOICES_PER_QUESTION}"
             )
@@ -193,11 +194,11 @@ class QuestionParser:
             question_id: The question number for error messages
 
         Raises:
-            ValueError: If labels are missing or invalid
+            ParsingError: If labels are missing or invalid
         """
         labels = {c.label for c in choices}
         if labels != set(LABEL_CHOICES):
-            raise ValueError(
+            raise ParsingError(
                 f"Question {question_id} has invalid labels: {sorted(labels)}, "
                 f"expected {sorted(LABEL_CHOICES)}"
             )
