@@ -1,8 +1,16 @@
 """Data models for quiz questions and choices."""
 
+from typing import Any
+
 from pydantic import BaseModel, ConfigDict, field_validator
 
-from question_parser.defaults import CHOICES_PER_QUESTION, LABEL_CHOICES, LabelType
+from question_parser.defaults import (
+    CHOICES_PER_QUESTION,
+    LABEL_CHOICES,
+    QUESTION_ID_START,
+    QUIZ_VERSION,
+    LabelType,
+)
 
 
 class Choice(BaseModel):
@@ -73,3 +81,38 @@ class Question(BaseModel):
             )
 
         return value
+
+
+class Quiz(BaseModel):
+    """A complete quiz with multiple questions.
+
+    Attributes:
+        version: Quiz format version
+        questions: List of questions (must have sequential IDs)
+    """
+
+    model_config = ConfigDict(frozen=True)
+
+    version: str = QUIZ_VERSION
+    questions: list[Question]
+
+    @field_validator("questions")
+    @classmethod
+    def validate_sequential_ids(cls, value: list[Question]) -> list[Question]:
+        """Validate questions have sequential IDs starting from configured start value."""
+        if not value:
+            raise ValueError("Quiz must have at least one question")
+
+        ids = [q.id for q in value]
+        expected_ids = list(range(QUESTION_ID_START, len(value) + QUESTION_ID_START))
+
+        if ids != expected_ids:
+            raise ValueError(
+                f"Question IDs must be sequential starting from {QUESTION_ID_START}, got {ids}"
+            )
+
+        return value
+
+    def model_dump_json(self, **kwargs: Any) -> str:
+        """Serialize to JSON string with pretty formatting."""
+        return super().model_dump_json(indent=2, **kwargs)
