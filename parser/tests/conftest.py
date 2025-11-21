@@ -3,7 +3,7 @@
 import pytest
 
 from question_parser.defaults import LABEL_CHOICES
-from question_parser.models import Choice
+from question_parser.models import Choice, Question
 
 
 @pytest.fixture
@@ -45,3 +45,15 @@ def valid_choices(
 ) -> list[Choice]:
     """A valid list of 4 choices with A-D labels."""
     return [valid_choice_a, valid_choice_b, valid_choice_c, valid_choice_d]
+
+
+@pytest.fixture
+def valid_question(valid_choices: list[Choice]) -> Question:
+    """A valid Question."""
+    return Question(id=1, text="What is the capital of France?", choices=valid_choices)
+
+
+@pytest.fixture
+def valid_question_2(valid_choices: list[Choice]) -> Question:
+    """A second valid Question with ID 2."""
+    return Question(id=2, text="What is 2 + 2?", choices=valid_choices)
