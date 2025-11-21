@@ -3,7 +3,7 @@
 import pytest
 
 from question_parser.defaults import LABEL_CHOICES
-from question_parser.models import Choice, Question
+from question_parser.models import Choice, Question, Quiz
 
 
 @pytest.fixture
@@ -57,3 +57,9 @@ def valid_question(valid_choices: list[Choice]) -> Question:
 def valid_question_2(valid_choices: list[Choice]) -> Question:
     """A second valid Question with ID 2."""
     return Question(id=2, text="What is 2 + 2?", choices=valid_choices)
+
+
+@pytest.fixture
+def valid_quiz(valid_question: Question, valid_question_2: Question) -> Quiz:
+    """A valid Quiz with sequential questions."""
+    return Quiz(questions=[valid_question, valid_question_2])
