@@ -1,8 +1,7 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
 import { useQuiz } from './composables/useQuiz'
-import QuestionCard from './components/QuestionCard.vue'
-import QuizProgress from './components/QuizProgress.vue'
+import QuizView from './components/QuizView.vue'
 import ResultsView from './components/ResultsView.vue'
 import './assets/app.css'
 
@@ -49,24 +48,19 @@ onMounted(() => {
       <ResultsView v-if="state.isComplete && quiz" :quiz="quiz" :answers="state.answers" @restart="restart" />
 
       <!-- Quiz In Progress -->
-      <div v-else-if="currentQuestion" class="quiz">
-        <QuizProgress :current="state.currentQuestionIndex" :total="totalQuestions" :progress="progress" />
-
-        <QuestionCard
-          :question="currentQuestion"
-          :selected-answer="currentAnswer"
-          @select="selectAnswer"
-        />
-
-        <div class="navigation">
-          <button @click="previousQuestion" :disabled="!canGoPrevious" class="btn btn-secondary">
-            Previous
-          </button>
-          <button @click="nextQuestion" class="btn btn-primary">
-            {{ canGoNext ? 'Next' : 'Finish' }}
-          </button>
-        </div>
-      </div>
+      <QuizView
+        v-else-if="currentQuestion"
+        :current-question="currentQuestion"
+        :selected-answer="currentAnswer"
+        :current-index="state.currentQuestionIndex"
+        :total-questions="totalQuestions"
+        :progress="progress"
+        :can-go-next="canGoNext"
+        :can-go-previous="canGoPrevious"
+        @select="selectAnswer"
+        @next="nextQuestion"
+        @previous="previousQuestion"
+      />
     </main>
   </div>
 </template>
