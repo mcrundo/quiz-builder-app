@@ -1,47 +1,90 @@
 <script setup lang="ts">
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
+import { onMounted } from 'vue'
+import { useQuiz } from './composables/useQuiz'
+import QuestionCard from './components/QuestionCard.vue'
+import QuizProgress from './components/QuizProgress.vue'
+import './assets/app.css'
+
+const {
+  quiz,
+  loading,
+  error,
+  state,
+  currentQuestion,
+  currentAnswer,
+  totalQuestions,
+  progress,
+  canGoNext,
+  canGoPrevious,
+  loadQuiz,
+  selectAnswer,
+  nextQuestion,
+  previousQuestion,
+  restart,
+} = useQuiz()
+
+onMounted(() => {
+  loadQuiz()
+})
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
+  <div class="app">
+    <header class="header">
+      <h1>Quiz App</h1>
+    </header>
 
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-    </div>
-  </header>
+    <main class="main">
+      <!-- Loading State -->
+      <div v-if="loading" class="loading">Loading quiz...</div>
 
-  <main>
-    <TheWelcome />
-  </main>
+      <!-- Error State -->
+      <div v-else-if="error" class="error">
+        <p>{{ error }}</p>
+        <button @click="loadQuiz" class="btn btn-primary">Retry</button>
+      </div>
+
+      <!-- Quiz Completed -->
+      <div v-else-if="state.isComplete && quiz" class="results">
+        <h2>Quiz Complete!</h2>
+        <p class="results-text">You've answered all {{ totalQuestions }} questions.</p>
+
+        <div class="results-list">
+          <div v-for="question in quiz.questions" :key="question.id" class="result-item">
+            <h3>Question {{ question.id }}: {{ question.text }}</h3>
+            <p class="answer">
+              Your answer:
+              <strong>
+                {{
+                  state.answers.find((a) => a.questionId === question.id)?.selectedLabel || 'N/A'
+                }}
+              </strong>
+            </p>
+          </div>
+        </div>
+
+        <button @click="restart" class="btn btn-primary">Start Over</button>
+      </div>
+
+      <!-- Quiz In Progress -->
+      <div v-else-if="currentQuestion" class="quiz">
+        <QuizProgress :current="state.currentQuestionIndex" :total="totalQuestions" :progress="progress" />
+
+        <QuestionCard
+          :question="currentQuestion"
+          :selected-answer="currentAnswer"
+          @select="selectAnswer"
+        />
+
+        <div class="navigation">
+          <button @click="previousQuestion" :disabled="!canGoPrevious" class="btn btn-secondary">
+            Previous
+          </button>
+          <button @click="nextQuestion" class="btn btn-primary">
+            {{ canGoNext ? 'Next' : 'Finish' }}
+          </button>
+        </div>
+      </div>
+    </main>
+  </div>
 </template>
-
-<style scoped>
-header {
-  line-height: 1.5;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-}
-</style>
