@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
 import { useQuiz } from './composables/useQuiz'
-import QuestionCard from './components/QuestionCard.vue'
-import QuizProgress from './components/QuizProgress.vue'
+import QuizView from './components/QuizView.vue'
+import ResultsView from './components/ResultsView.vue'
 import './assets/app.css'
 
 const {
@@ -45,46 +45,22 @@ onMounted(() => {
       </div>
 
       <!-- Quiz Completed -->
-      <div v-else-if="state.isComplete && quiz" class="results">
-        <h2>Quiz Complete!</h2>
-        <p class="results-text">You've answered all {{ totalQuestions }} questions.</p>
-
-        <div class="results-list">
-          <div v-for="question in quiz.questions" :key="question.id" class="result-item">
-            <h3>Question {{ question.id }}: {{ question.text }}</h3>
-            <p class="answer">
-              Your answer:
-              <strong>
-                {{
-                  state.answers.find((a) => a.questionId === question.id)?.selectedLabel || 'N/A'
-                }}
-              </strong>
-            </p>
-          </div>
-        </div>
-
-        <button @click="restart" class="btn btn-primary">Start Over</button>
-      </div>
+      <ResultsView v-if="state.isComplete && quiz" :quiz="quiz" :answers="state.answers" @restart="restart" />
 
       <!-- Quiz In Progress -->
-      <div v-else-if="currentQuestion" class="quiz">
-        <QuizProgress :current="state.currentQuestionIndex" :total="totalQuestions" :progress="progress" />
-
-        <QuestionCard
-          :question="currentQuestion"
-          :selected-answer="currentAnswer"
-          @select="selectAnswer"
-        />
-
-        <div class="navigation">
-          <button @click="previousQuestion" :disabled="!canGoPrevious" class="btn btn-secondary">
-            Previous
-          </button>
-          <button @click="nextQuestion" class="btn btn-primary">
-            {{ canGoNext ? 'Next' : 'Finish' }}
-          </button>
-        </div>
-      </div>
+      <QuizView
+        v-else-if="currentQuestion"
+        :current-question="currentQuestion"
+        :selected-answer="currentAnswer"
+        :current-index="state.currentQuestionIndex"
+        :total-questions="totalQuestions"
+        :progress="progress"
+        :can-go-next="canGoNext"
+        :can-go-previous="canGoPrevious"
+        @select="selectAnswer"
+        @next="nextQuestion"
+        @previous="previousQuestion"
+      />
     </main>
   </div>
 </template>
